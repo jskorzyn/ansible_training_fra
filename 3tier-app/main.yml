@@ -38,37 +38,12 @@
 
   roles:
     - tomcat_deploy
+    - apache_deploy
 
-- name: index.html on app 1
-  hosts: app1
-  gather_facts: false
-  become: true
-
-  roles:
-    - app1
-
-- name: index.html on app 1
-  hosts: app2
-  gather_facts: false
-  become: true
-
-  roles:
-    - app2
-
-- name: deploy postgres
-  hosts: apps
-  gather_facts: false
-  become: true
+- name: deploy tomcat
   hosts: appdbs
+  gather_facts: false
+  become: true
 
   roles:
     - postgres_deploy
-
-- name: deploy apache
-  hosts: apps
-  gather_facts: false
-  become: true
-  hosts: apps
-
-  roles:
-    - apache_deploy
