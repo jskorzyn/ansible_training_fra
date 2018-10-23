@@ -2,12 +2,7 @@
 - name: install progress
   yum:
     name: postgresql-server
-    state: present
-
-- name: enable apache at boot
-  service:
-    name: postgresql
-    enabled: yes
+    state: latest
 
 - name: tell user to finish setting up postgres
   debug:
@@ -17,3 +12,4 @@
   service:
     name: postgresql.service
     state: started
+    enabled: yes

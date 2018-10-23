@@ -40,10 +40,10 @@
     - tomcat_deploy
     - apache_deploy
 
-- name: deploy tomcat
+- name: deploy postgres
   hosts: appdbs
-  gather_facts: false
+  gather_facts: true
   become: true
 
   roles:
-    - postgres_deploy
+    - geerlingguy.postgresql
