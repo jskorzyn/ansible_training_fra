@@ -1,0 +1,80 @@
+[bastions]
+bastion.a89a.example.opentlc.com
+
+[internal:children]
+frontends
+apps
+appdbs
+
+[frontends]
+## These are the frontends
+frontend1.a89a.example.opentlc.com
+
+[apps]
+## These are the apps
+app1.a89a.example.opentlc.com
+app2.a89a.example.opentlc.com
+
+[appdbs]
+## These are the appdbi(s)
+appdb1.a89a.example.opentlc.com
+
+[GenericExample:children]
+towers
+windows
+support
+
+[towers]
+## These are the towers
+tower1.d9dd.example.opentlc.com
+tower2.d9dd.example.opentlc.com
+tower3.d9dd.example.opentlc.com
+
+
+[windows]
+## These are the activedirectory servers
+#ad1.d9dd.example.opentlc.com
+ad1.d9dd.internal
+
+## These are the supporthosts
+[support]
+support1.d9dd.example.opentlc.com
+support2.d9dd.example.opentlc.com
+
+
+[windows:vars]
+ansible_password=jVMijRwLbI02gFCo2xkjlZ9lxEA7bm7zgg==
+ad_domain_name=ad1.d9dd.example.opentlc.com
+ad_domain_name=ad1.d9dd.example.opentlc.com
+ad_safe_mode_password="{{ansible_password}}"
+ad_admin_user="admin@{{ ad_domain_name}}"
+ad_admin_password="{{ansible_password}}"
+#ansible_connection=winrm
+#ansible_port=5986
+#ansible_ssh_port=5986
+#ansible_user=Administrator
+#ansible_ssh_user=Administrator
+#ansible_winrm_server_cert_validation=ignore
+#ansible_winrm_transport=basic
+#ansible_become=false
+
+#PSRP variables
+ansible_user=Administrator
+ansible_password=jVMijRwLbI02gFCo2xkjlZ9lxEA7bm7zgg==
+ansible_connection=psrp
+ansible_psrp_auth=basic
+ansible_psrp_cert_validation=ignore
+ansible_psrp_proxy=socks5h://localhost:2222
+ansible_become=false
+#ansible_psrp_proxy=socks5h://jskorzyn-redhat.com@bastion.a89a.example.opentlc.com:12345
+
+[linux_machines:children]
+support
+towers
+frontends
+apps
+appdbs
+bastions
+
+[linux_machines:vars]
+ansible_user=jskorzyn-redhat.com

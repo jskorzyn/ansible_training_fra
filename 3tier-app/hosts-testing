@@ -1,0 +1,73 @@
+[bastions]
+bastion ansible_host=bastion.{{ GUID_App }}{{ domain_external }}
+
+[internal:children]
+frontends
+apps
+appdbs
+
+[frontends]
+## These are the frontends
+frontend1 ansible_host=frontend1.{{ GUID_App }}{{ domain_internal }}
+
+[apps]
+## These are the apps
+app1 ansible_host=app1.{{ GUID_App }}{{ domain_internal }}
+app2 ansible_host=app2.{{ GUID_App }}{{ domain_internal }}
+
+[appdbs]
+## These are the appdbi(s)
+appdb1 ansible_host=appdb1.{{ GUID_App }}{{ domain_internal }}
+
+[GenericExample:children]
+towers
+windows
+support
+
+[towers]
+## These are the towers
+tower1.{{ GUID_Tower }}{{ domain_internal }} public_host_name=tower1.{{ GUID_Tower }}{{ domain_external }} ssh_host=tower2.{{ GUID_Tower }}{{ domain_internal }}
+tower2.{{ GUID_Tower }}{{ domain_internal }} public_host_name=tower2.{{ GUID_Tower }}{{ domain_external }} ssh_host=tower3.{{ GUID_Tower }}{{ domain_internal }}
+tower3.{{ GUID_Tower }}{{ domain_internal }} public_host_name=tower3.{{ GUID_Tower }}{{ domain_external }} ssh_host=tower1.{{ GUID_Tower }}{{ domain_internal }}
+
+
+[windows]
+## These are the activedirectory servers
+ad1.{{ GUID_Tower }}{{ domain_internal }} ssh_host=ad1.{{ GUID_Tower }}{{ domain_external }}
+
+
+## These are the supporthosts
+[support]
+support1.{{ GUID_Tower }}{{ domain_internal }} ssh_host=support1.{{ GUID_Tower }}{{ domain_internal }}
+support2.{{ GUID_Tower }}{{ domain_internal }} ssh_host=support2.{{ GUID_Tower }}{{ domain_internal }}
+
+
+[windows:vars]
+ansible_password=jVMijRwLbI02gFCo2xkjlZ9lxEA7bm7zgg==
+ad_domain_name=ad1.{{GUID_Tower}}{{ domain_external }}
+ad_domain_name=ad1.{{GUID_Tower}}{{ domain_external }}
+ad_safe_mode_password="{{ansible_password}}"
+ad_admin_user="admin@{{ ad_domain_name}}"
+ad_admin_password="{{ansible_password}}"
+ansible_connection=winrm
+ansible_port=5986
+ansible_ssh_port=5986
+ansible_user=Administrator
+ansible_ssh_user=Administrator
+ansible_winrm_server_cert_validation=ignore
+ansible_winrm_transport=basic
+ansible_become=false
+
+[labs_all:children]
+internal
+GenericExample
+
+[labs_all:vars]
+
+GUID_App=a89a
+GUID_Tower=d9dd
+domain_internal=.internal
+domain_external=.example.opentlc.com
+timeout=60
+ansible_become=yes
+ansible_ssh_user=ec2-user

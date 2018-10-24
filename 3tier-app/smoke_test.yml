@@ -4,13 +4,13 @@
   gather_facts: false
   vars:
     - correct_response: Tomcat on app
-    - domain: .example.opentlc.com  
+    - domain: .example.opentlc.com
 
   tasks:
 
   - name: check load balancer for expected response
     uri:
-      url:  http://frontend.{{GUID }}{{ domain }}
+      url:  http://frontend.{{GUID_App }}{{ domain }}
       return_content: yes
     register: result
     until:  correct_response in result.content

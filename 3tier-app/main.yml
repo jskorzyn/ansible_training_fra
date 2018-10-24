@@ -19,6 +19,7 @@
   hosts: all:!bastions
   gather_facts: false # remove later! speeds up testing
   become: true
+  tags: app_install
 
   roles:
     - common
@@ -27,6 +28,7 @@
   hosts: frontends
   gather_facts: false # remove later! speeds up testing
   become: true
+  tags: app_install
 
   roles:
     - haproxy_install
@@ -35,6 +37,7 @@
   hosts: apps
   gather_facts: false
   become: true
+  tags: app_install
 
   roles:
     - tomcat_deploy
@@ -42,8 +45,18 @@
 
 - name: deploy postgres
   hosts: appdbs
-  gather_facts: true
+  gather_facts: false
   become: true
+  tags: app_install
 
   roles:
     - geerlingguy.postgresql
+
+- name: Deploy AD on Windows machine
+  hosts: windows
+  gather_facts: true
+  become: true
+  tags: ad_install
+
+  roles:
+    - win_ad_install

@@ -1,0 +1,69 @@
+---
+- name: Install Windows AD Roles
+  win_feature:
+    name: AD-Domain-Services
+    state: present
+
+- name: Setup Windows AD
+  win_domain:
+    dns_domain_name: ad1.d9dd.example.opentlc.com
+    safe_mode_password: jVMijRwLbI02gFCo2xkjlZ9lxEA7bm7zgg==
+#    database_path: # The path to a directory on a fixed disk of the Windows host where the domain database will be created.,If not set then the default path is C(%SYSTEMROOT%NTDS).
+#    domain_netbios_name: # The netbios name of the domain.,If not set, then the default netbios name will be the first section of dns_domain_name, up to, but not including the first period.
+#    sysvol_path: # The path to a directory on a fixed disk of the Windows host where the Sysvol file will be created.,If not set then the default path is C(%SYSTEMROOT%SYSVOL).
+
+- name: Configure Windows Firewall UDP Rules
+  win_firewall_rule:
+    name: AD UDP Rule {{ item }}
+    localport: "{{ item }}"
+    action: allow
+    direction: in
+    protocol: udp
+    state: present
+    enabled: yes
+  with_items:
+    - 123
+    - 464
+    - 389
+    - 53
+    - 88
+
+- name: Configure Windows Firewall TCP Rules
+  win_firewall_rule:
+    name: AD UDP Rule {{ item }}
+    localport: "{{ item }}"
+    action: allow
+    direction: in
+    protocol: tcp
+    state: present
+    enabled: yes
+  with_items:
+    - 135
+    - 49152-65535
+    - 389
+    - 636
+    - 3268
+    - 3269
+    - 53
+    - 49152-65535
+    - 88
+    - 445
+    - 49152-65535
+
+- name: Reboot AD Machine
+  win_reboot:
+    pre_reboot_delay: 5 # Seconds for shutdown to wait before requesting reboot
+    post_reboot_delay: 10 # Seconds to wait after the reboot was successful and the connection was re-established,This is useful if you want wait for something to settle despite your connection already working
+    test_command: whoami # Command to expect success for to determine the machine is ready for management
+    shutdown_timeout: 600 # Maximum seconds to wait for shutdown to occur,Increase this timeout for very slow hardware, large update applications, etc,This option has been removed since Ansible 2.5 as the win_reboot behavior has changed
+    reboot_timeout: 600 # Maximum seconds to wait for machine to re-appear on the network and respond to a test command,This timeout is evaluated separately for both network appearance and test command success (so maximum clock time is actually twice this value)
+    msg: Reboot initiated by Ansible # Message to display to users
+    connect_timeout: 5 # Maximum seconds to wait for a single successful TCP connection to the WinRM endpoint before trying again
+
+- name: Register the domain info
+  win_shell: nltest /dclist:"{{ ad_domain_name }}"
+  register: domain_result
+
+- name: Print out domain info
+  debug:
+    var: domain_result
