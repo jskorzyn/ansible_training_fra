@@ -1,0 +1,6 @@
+---
+- name: Playbook consumes role osp-network to create network infra on openstack
+  hosts: jumpbox
+
+  roles:
+    - osp-keypair

@@ -1,0 +1,19 @@
+---
+- name: Instal Windows Software usin chocolatey
+  win_chocolatey:
+    name: # Name of the package to be installed.,This must be a single package name.
+    proxy_url: # Proxy url used to install chocolatey and the package.
+    proxy_password: # Proxy password used to install chocolatey and the package.,See notes in C(proxy_username) when dealing with double quotes in a password.
+    install_args: # Arguments to pass to the native installer.
+    ignore_dependencies: no # Ignore dependencies, only install/upgrade the package itself.
+    skip_scripts: no # Do not run I(chocolateyInstall.ps1) or I(chocolateyUninstall.ps1) scripts.
+    force: no # Forces install of the package (even if it already exists).,Using C(force) will cause ansible to always report that a change was made.
+    ignore_checksums: no # Ignore checksums altogether.
+    allow_prerelease: no # Allow install of prerelease packages.,If state C(state) is C(latest) the highest prerelease package will be installed.
+    allow_empty_checksums: no # Allow empty checksums to be used.
+    source: # Specify source rather than using default chocolatey repository.
+    state: present # State of the package on the system.
+    version: # Specific version of the package to be installed.,Ignored when C(state) is set to C(absent).
+    params: # Parameters to pass to the package
+    proxy_username: # Proxy username used to install chocolatey and the package.,When dealing with a username with double quote characters C("), they need to be escaped with C() beforehand. See examples for more details.
+    timeout: 2700 # The time to allow chocolatey to finish before timing out.

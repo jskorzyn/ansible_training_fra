@@ -1,0 +1,31 @@
+---
+ - name: install PostgreSQL repos
+   yum:
+     name: https://download.postgresql.org/pub/repos/yum/11/redhat/rhel-7-x86_64/pgdg-redhat11-11-2.noarch.rpm
+     state: absent
+
+ - name: copy repofile
+   copy:
+     dest:  /etc/yum.repos.d/open.repo
+     src: open.repo
+
+# - name: debug repolist
+#   command: yum repolist
+#   register: yumresult
+#
+# - name: repo display
+#   debug:
+#     var: yumresult
+
+ - name: Ensure PostgreSQL packages are installed.
+   package:
+     name: "{{ item }}"
+     state: installed
+#     enablerepo: "{{ postgresql_enablerepo }}"
+   with_items: "{{ postgresql_packages }}"
+
+ - name: Ensure PostgreSQL Python libraries are installed.
+   package:
+     name: "{{ postgresql_python_library }}"
+     state: installed
+#     enablerepo: "{{ postgresql_enablerepo }}"
