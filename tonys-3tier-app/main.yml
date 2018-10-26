@@ -1,10 +1,15 @@
 ---
-- name: generate openstack in-memory inventory 
+- name: generate openstack in-memory inventory
   hosts: jumpbox
   gather_facts: false
   roles:
   - name: osp-facts
 
+- name: Download SSH keys
+  get_url:
+    url: http://www.opentlc.com/download/ansible_bootcamp/openstack_keys/openstack.pem
+    dest: ~/.ssh/openstack.pem
+    flat: yes
 
 - name: common tasks
   hosts: all
@@ -36,4 +41,3 @@
   hosts: appdbs
   roles:
     - geerlingguy.postgresql
-
